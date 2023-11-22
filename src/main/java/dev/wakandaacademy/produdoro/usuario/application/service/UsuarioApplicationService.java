@@ -3,9 +3,12 @@ package dev.wakandaacademy.produdoro.usuario.application.service;
 import javax.validation.Valid;
 
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import dev.wakandaacademy.produdoro.credencial.application.service.CredencialService;
+import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.pomodoro.application.service.PomodoroService;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioCriadoResponse;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
@@ -43,5 +46,17 @@ public class UsuarioApplicationService implements UsuarioService {
 		return new UsuarioCriadoResponse(usuario);
 	}
 
+	@Override
+	public void mudaStatusParaPausaLonga(String email, UUID idUsuario) {
+		log.info("[inicia] UsuarioApplicationService - mudaStatusParaPausaLonga");
+		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(email);
+		if (!idUsuario.equals(usuario.getIdUsuario())) {
+			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não e valida");
+		}
+		usuario.mudaStatusParaPausaLonga(); 
+		usuarioRepository.salva(usuario);
+		log.info("[finaliza] UsuarioApplicationService - mudaStatusParaPausaLonga");
+
+	}
 
 }
