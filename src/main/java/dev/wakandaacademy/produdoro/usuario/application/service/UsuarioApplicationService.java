@@ -31,12 +31,11 @@ public class UsuarioApplicationService implements UsuarioService {
 		log.info("[inicia] UsuarioApplicationService - criaNovoUsuario");
 		var configuracaoPadrao = pomodoroService.getConfiguracaoPadrao();
 		credencialService.criaNovaCredencial(usuarioNovo);
-		var usuario = new Usuario(usuarioNovo,configuracaoPadrao);
+		var usuario = new Usuario(usuarioNovo, configuracaoPadrao);
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - criaNovoUsuario");
 		return new UsuarioCriadoResponse(usuario);
 	}
-
 
 	@Override
 	public UsuarioCriadoResponse buscaUsuarioPorId(UUID idUsuario) {
@@ -53,7 +52,7 @@ public class UsuarioApplicationService implements UsuarioService {
 		if (!idUsuario.equals(usuario.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não e valida");
 		}
-		usuario.mudaStatusParaPausaLonga(); 
+		usuario.mudaStatusParaPausaLonga();
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - mudaStatusParaPausaLonga");
 
