@@ -44,4 +44,6 @@ public class Usuario {
 
     public void mudaStatusParaPausaLonga() {
     }
+
+	
 }
