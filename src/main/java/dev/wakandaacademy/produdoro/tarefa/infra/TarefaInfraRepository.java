@@ -41,8 +41,9 @@ public class TarefaInfraRepository implements TarefaRepository {
 	@Override
 	public List<Tarefa> buscaTodasTarefas(UUID idUsuario) {
 		log.info("[inicia] TarefaInfraRepository - buscaTodasTarefas");
+		List<Tarefa> lista = tarefaSpringMongoDBRepository.findAllByIdUsuario(idUsuario);
 		log.info("[finaliza] TarefaInfraRepository - buscaTodasTarefas");
-		return null;
+		return lista;
 	}
 	
 }
