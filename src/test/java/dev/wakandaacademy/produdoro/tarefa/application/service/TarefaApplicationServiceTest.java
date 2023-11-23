@@ -1,25 +1,24 @@
 package dev.wakandaacademy.produdoro.tarefa.application.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
+import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
+import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
-import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
-import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TarefaApplicationServiceTest {
@@ -31,6 +30,9 @@ class TarefaApplicationServiceTest {
     //	@MockBean
     @Mock
     TarefaRepository tarefaRepository;
+
+    @Mock
+    UsuarioRepository usuarioRepository;
 
     @Test
     void deveRetornarIdTarefaNovaCriada() {
@@ -44,6 +46,21 @@ class TarefaApplicationServiceTest {
         assertEquals(UUID.class, response.getIdTarefa().getClass());
     }
 
+    @Test
+    public void testConcluiTarefa() {
+        String usuario = "email@email.com";
+        UUID idTarefa = UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb");
+        Usuario usuarioMock = mock(Usuario.class);
+        Tarefa tarefaMock = mock(Tarefa.class);
+        when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
+        when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
+        tarefaApplicationService.concluiTarefa(idTarefa,UUID.randomUUID(),usuario);
+        verify(usuarioRepository).buscaUsuarioPorEmail(usuario);
+        verify(tarefaRepository).buscaTarefaPorId(idTarefa);
+        verify(tarefaMock).pertenceAoUsuario(usuarioMock);
+        verify(tarefaMock).concluiTarefa();
+        verify(tarefaRepository).salva(tarefaMock);
+}
 
 
     public TarefaRequest getTarefaRequest() {
