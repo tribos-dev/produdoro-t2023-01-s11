@@ -34,7 +34,7 @@ public class Usuario {
 	private StatusUsuario status = StatusUsuario.FOCO;
 	@Builder.Default
 	private Integer quantidadePomodorosPausaCurta = 0;
-	
+
 	public Usuario(UsuarioNovoRequest usuarioNovo, ConfiguracaoPadrao configuracaoPadrao) {
 		this.idUsuario = UUID.randomUUID();
 		this.email = usuarioNovo.getEmail();
@@ -42,11 +42,8 @@ public class Usuario {
 		this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
 	}
 
-    public void mudaStatusParaPausaLonga() {
-    }
+	public void mudaStatusParaPausaCurta() {
+		this.status = StatusUsuario.PAUSA_CURTA;
+	}
 
-    public void mudaStatusParaPausaCurta() {
-    }
-
-	
 }
