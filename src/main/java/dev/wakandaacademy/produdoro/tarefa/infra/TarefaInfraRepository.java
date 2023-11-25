@@ -2,9 +2,11 @@ package dev.wakandaacademy.produdoro.tarefa.infra;
 
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class TarefaInfraRepository implements TarefaRepository {
 
     private final TarefaSpringMongoDBRepository tarefaSpringMongoDBRepository;
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     @Override
@@ -44,14 +47,13 @@ public class TarefaInfraRepository implements TarefaRepository {
     }
 
     @Override
-    public void desativaTarefa(UUID idUsuario) {
-        log.info("[inicia] TarefaInfraRepository - desativaTarefa");
-
-        Query query = Query.query(Criteria.where("idUsuario").is(idUsuario));
-        Update update = Update.update("statusAtivacao", "INATIVA");
+    public void desativaTarefasAtivas(UUID idUsuario) {
+        log.info("[inicia] TarefaInfraRepository - desativaTarefasAtivas");
+        Query query = new Query(Criteria.where("idUsuario").is(idUsuario)
+                .and("statusAtivacao").is(StatusAtivacaoTarefa.ATIVA));
+        Update update = new Update().set("statusAtivacao", StatusAtivacaoTarefa.INATIVA);
         mongoTemplate.updateMulti(query, update, Tarefa.class);
-
-        log.info("[finaliza] TarefaInfraRepository - desativaTarefa");
+        log.info("[finaliza] TarefaInfraRepository - desativaTarefasAtivas");
     }
 
 }

@@ -22,5 +22,5 @@ public interface TarefaAPI {
     @PatchMapping("/ativa-tarefa/{idTarefa}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     void ativaTarefa(@PathVariable UUID idTarefa, @RequestParam UUID idUsuario,
-                     @RequestParam(name = "Authorization") String token);
+                     @RequestHeader(name = "Authorization") String token);
 }
