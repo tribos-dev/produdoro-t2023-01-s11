@@ -51,7 +51,7 @@ public class Tarefa {
 	}
 
 	public void pertenceAoUsuario(Usuario usuarioPorEmail) {
-		if(!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
+		if (!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
 		}
 	}
@@ -61,8 +61,12 @@ public class Tarefa {
 	}
 
 	public void validacaoDeUsuario(UUID idUsuario) {
-		if(!idUsuario.equals(this.getIdUsuario())) {
+		if (!idUsuario.equals(this.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário Inválido!");
 		}
 	}
+		public void concluiTarefa () {
+			this.status = StatusTarefa.CONCLUIDA;
+		}
 }
+
