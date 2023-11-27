@@ -57,6 +57,6 @@ public class Tarefa {
 	}
 
 	public void edita(TarefaRequest tarefaRequest) {
-		this.descricao = getDescricao() ;
+		this.descricao = tarefaRequest.getDescricao() ;
 	}
 }
