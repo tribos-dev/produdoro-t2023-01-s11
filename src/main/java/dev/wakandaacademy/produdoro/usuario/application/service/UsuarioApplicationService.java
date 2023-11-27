@@ -49,10 +49,7 @@ public class UsuarioApplicationService implements UsuarioService {
 	public void mudaStatusParaPausaCurta(String email, UUID idUsuario) {
 		log.info("[inicia] UsuarioApplicationService - mudaStatusParaPausaCurta");
 		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(email);
-		if (!idUsuario.equals(usuario.getIdUsuario())) {
-			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não e valida");
-		}
-		usuario.mudaStatusParaPausaCurta();
+		usuario.mudaStatusParaPausaCurta(idUsuario);
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - mudaStatusParaPausaCurta");
 
