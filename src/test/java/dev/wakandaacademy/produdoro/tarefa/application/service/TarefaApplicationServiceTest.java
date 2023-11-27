@@ -1,9 +1,10 @@
 package dev.wakandaacademy.produdoro.tarefa.application.service;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
@@ -53,6 +55,22 @@ class TarefaApplicationServiceTest {
     }
 
 
+    @Test
+    public void testConcluiTarefa() {
+        String usuario = "email@email.com";
+        UUID idTarefa = UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb");
+        Usuario usuarioMock = mock(Usuario.class);
+        Tarefa tarefaMock = mock(Tarefa.class);
+        when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
+        when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
+        tarefaApplicationService.concluiTarefa(idTarefa,UUID.randomUUID(),usuario);
+        verify(usuarioRepository).buscaUsuarioPorEmail(usuario);
+        verify(tarefaRepository).buscaTarefaPorId(idTarefa);
+        verify(tarefaMock).pertenceAoUsuario(usuarioMock);
+        verify(tarefaMock).concluiTarefa();
+        verify(tarefaRepository).salva(tarefaMock);
+}
+
 
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
@@ -83,5 +101,32 @@ class TarefaApplicationServiceTest {
     	when(usuarioRepository.buscaUsuarioPorEmail(usuarioEmailInvalido)).thenThrow(APIException.class);
     	APIException ex = assertThrows(APIException.class, () -> tarefaApplicationService
     			.incrementaPomodoroAoUsuario(usuarioEmailInvalido, tarefa.getIdTarefa()));
+    }
+
+    @Test
+    void deveDeletarTarefaComSucesso(){
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+
+        when(usuarioRepository.buscaUsuarioPorEmail(usuario.getEmail())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(tarefa.getIdTarefa())).thenReturn(Optional.of(tarefa));
+
+        tarefaApplicationService.deletaTarefa(usuario.getEmail(),tarefa.getIdTarefa());
+        verify(tarefaRepository,times(1)).deletaTarefa(tarefa);
+    }
+    @Test
+    void deveNaoDeletarTarefa_QuandoPassarIdDaTarefaInvalido() {
+        UUID idTarefa = UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6e3");
+        String usuarioEmail = "juliana@gmail.com";
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+
+        APIException ex = assertThrows(APIException.class, () ->
+            tarefaApplicationService.deletaTarefa(usuario.getEmail(), tarefa.getIdTarefa())
+        );
+
+        assertNotEquals(idTarefa, tarefa.getIdTarefa());
+        assertNotEquals(usuarioEmail, usuario.getEmail());
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusException());
     }
 }
