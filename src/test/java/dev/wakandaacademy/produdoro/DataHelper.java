@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
+import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
@@ -14,6 +15,8 @@ import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 public class DataHelper {
 
     private static final UUID usuario1 = UUID.fromString("a713162f-20a9-4db9-a85b-90cd51ab18f4");
+    public static final String TOKEN_VALIDO = "gabriel@gmail.com";
+    public static final UUID ID_TAREFA_VALIDO = UUID.fromString("6028a995-b5a8-4c30-ae39-512076daf2b4");
 
     public static Usuario createUsuario() {
         return Usuario.builder().email("email@email.com").status(StatusUsuario.PAUSA_LONGA).idUsuario(usuario1).build();
@@ -53,4 +56,10 @@ public class DataHelper {
 
         );
     }
+
+    public  EditaTarefaRequest createEditaTarefaRequest() {
+        EditaTarefaRequest request = new EditaTarefaRequest("Teste");
+        return request;
+    }
+
 }
