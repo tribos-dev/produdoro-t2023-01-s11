@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 public interface TarefaService {
     TarefaIdResponse criaNovaTarefa(TarefaRequest tarefaRequest);
-    Tarefa detalhaTarefa(String usuario, UUID idTarefa);
-	List<TarefaListResponse> listaTodasTarefas(UUID idUsuario);
+    Tarefa detalhaTarefa(String usuario, UUID idTarefa);	
+	List<TarefaListResponse> buscaTarefasPorUsuario(String usuario, UUID idUsuario);
 }

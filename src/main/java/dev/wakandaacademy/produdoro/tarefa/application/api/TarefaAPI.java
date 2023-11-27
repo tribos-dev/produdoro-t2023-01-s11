@@ -27,8 +27,9 @@ public interface TarefaAPI {
     TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization",required = true) String token, 
     		@PathVariable UUID idTarefa);
     
-    @GetMapping("/todasTarefas/{idUsuario}")
+    @GetMapping("/usuarioTarefas/{idUsuario}")
     @ResponseStatus(code = HttpStatus.OK)
-    List<TarefaListResponse> getListaTodasTarefas(@PathVariable UUID idUsuario);
+    List<TarefaListResponse> buscaTarefasPorUsuario(@RequestHeader(name = "Authorization",required = true) String token,
+            @PathVariable UUID idUsuario);
 
 }
