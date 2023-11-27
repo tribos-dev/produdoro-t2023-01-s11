@@ -14,6 +14,7 @@ import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 public class DataHelper {
 
     private static final UUID usuario1 = UUID.fromString("a713162f-20a9-4db9-a85b-90cd51ab18f4");
+    private static final UUID ID_USUARIO_VALIDO = UUID.fromString("00ae892b-6145-42e9-be35-da0ab60e00fb");
 
     public static Usuario createUsuario() {
         return Usuario.builder().email("email@email.com").status(StatusUsuario.PAUSA_LONGA).idUsuario(usuario1).build();
@@ -52,5 +53,16 @@ public class DataHelper {
                 Tarefa.builder().build()
 
         );
+        
+    }
+
+    public static Tarefa getTarefaAtivaTarefa() {
+        return Tarefa.builder()
+                .contagemPomodoro(2)
+                .descricao("Teste concluido! Tarefa Ativa")
+                .statusAtivacao(StatusAtivacaoTarefa.ATIVA)
+                .idUsuario(ID_USUARIO_VALIDO)
+                .idArea(UUID.randomUUID())
+                .build();
     }
 }
