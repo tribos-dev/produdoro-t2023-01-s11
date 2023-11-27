@@ -47,9 +47,6 @@ public class TarefaRestController implements TarefaAPI {
 		log.info("[inicia] TarefaRestController - incrementaPomodoro");
 		String emailUsuario = getUsuarioByToken(token);
 		tarefaService.incrementaPomodoroAoUsuario(emailUsuario, idTarefa);
-		log.info("[finaliza] TarefaRestController - incrementaPomodoro");
-		
-		
+		log.info("[finaliza] TarefaRestController - incrementaPomodoro");		
 	}
-
 }

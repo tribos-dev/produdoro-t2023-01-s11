@@ -57,7 +57,7 @@ public class Tarefa {
 	}
 
 	public void contagemPomodoro() {
-		this.contagemPomodoro += 25;
+		this.contagemPomodoro += 1;
 	}
 
 }
