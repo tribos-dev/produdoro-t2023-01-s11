@@ -19,7 +19,12 @@ public interface TarefaAPI {
     TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization",required = true) String token, 
     		@PathVariable UUID idTarefa);
 
+    @PatchMapping("/conclui-tarefa/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void concluiTarefa(@PathVariable UUID idTarefa,@RequestParam UUID idUsuario,@RequestHeader(name="Authorization",required = true)String token);
+
     @DeleteMapping("/{idTarefa}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     void deletaTarefa(@RequestHeader(name = "Authorization",required = true) String token, @PathVariable UUID idTarefa);
 }
+
