@@ -46,6 +46,7 @@ public class UsuarioApplicationService implements UsuarioService {
 	@Override
 	public void mudaStatusParaPausaLonga(String email, UUID idUsuario) {
 		log.info("[inicia] UsuarioApplicationService - mudaStatusParaPausaLonga");
+		usuarioRepository.buscaUsuarioPorId(idUsuario);
 		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(email);
 		usuario.mudaStatusParaPausaLonga(idUsuario);
 		usuarioRepository.salva(usuario);
