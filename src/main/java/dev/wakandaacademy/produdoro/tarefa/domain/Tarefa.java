@@ -56,11 +56,12 @@ public class Tarefa {
 		}
 	}
 
-	public void defineStatusAtivacao() {
+	public void defineStatusAtivacao(UUID idUsuario) {
+		validacaoDeUsuario(this.idUsuario);
 		this.statusAtivacao = StatusAtivacaoTarefa.ATIVA;
 	}
 
-	public void validacaoDeUsuario(UUID idUsuario) {
+	private void validacaoDeUsuario(UUID idUsuario) {
 		if (!idUsuario.equals(this.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário Inválido!");
 		}
