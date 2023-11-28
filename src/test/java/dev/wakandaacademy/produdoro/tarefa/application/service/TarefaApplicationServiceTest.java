@@ -53,13 +53,6 @@ class TarefaApplicationServiceTest {
     TarefaRepository tarefaRepository;
     @Mock
     UsuarioRepository usuarioRepository;
-    private Optional<Tarefa> OptionalTarefaValidaEsperada;
-    private Usuario usuarioValido;
-    private TarefaRequest TarefaRequest;
-    private EditaTarefaRequest editaTarefaRequest;
-
-    @Mock
-    UsuarioRepository usuarioRepository;
 
     @Test
     void deveRetornarIdTarefaNovaCriada() {
