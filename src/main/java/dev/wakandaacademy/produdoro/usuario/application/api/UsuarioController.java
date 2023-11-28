@@ -22,7 +22,6 @@ public class UsuarioController implements UsuarioAPI {
 	private final UsuarioService usuarioAppplicationService;
 	private final TokenService tokenService;
 
-
 	@Override
 	public UsuarioCriadoResponse postNovoUsuario(@Valid UsuarioNovoRequest usuarioNovo) {
 		log.info("[inicia] UsuarioController - postNovoUsuario");
@@ -30,6 +29,7 @@ public class UsuarioController implements UsuarioAPI {
 		log.info("[finaliza] UsuarioController - postNovoUsuario");
 		return usuarioCriado;
 	}
+
 	@Override
 	public UsuarioCriadoResponse buscaUsuarioPorId(UUID idUsuario) {
 		log.info("[inicia] UsuarioController - buscaUsuarioPorId");
@@ -38,6 +38,17 @@ public class UsuarioController implements UsuarioAPI {
 		log.info("[finaliza] UsuarioController - buscaUsuarioPorId");
 		return buscaUsuario;
 	}
+
+	@Override
+	public void mudaStatusParaPausaLonga(String token, UUID idUsuario) {
+		log.info("[inicia]UsuarioController - mudaStatusParaPausaLonga");
+		log.info("[idUsuario] {}", idUsuario);
+		String usuario = tokenService.getUsuarioByBearerToken(token)
+				.orElseThrow(() -> APIException.build(HttpStatus.FORBIDDEN, "Token Inválido!"));
+		usuarioAppplicationService.mudaStatusParaPausaLonga(usuario, idUsuario);
+		log.info("[Finaliza]UsuarioController - mudaStatusParaPausaLonga");
+	}
+
 	@Override
 	public void atualizaStatusFoco(String token, UUID idUsuario) {
 		log.info("[inicia] UsuarioController - atualizaStatusFoco");
