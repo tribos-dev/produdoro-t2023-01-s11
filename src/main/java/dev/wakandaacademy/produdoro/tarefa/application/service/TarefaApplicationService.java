@@ -40,4 +40,36 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] TarefaApplicationService - detalhaTarefa");
         return tarefa;
     }
+    
+	@Override
+	public void incrementaPomodoroAoUsuario(String emailUsuario, UUID idTarefa) {
+		log.info("[inicia] TarefaApplicationService - incrementaPomodoroAoUsuario");
+		Tarefa tarefa = detalhaTarefa(emailUsuario, idTarefa);
+		tarefa.contagemPomodoro();
+		tarefaRepository.salva(tarefa);
+		log.info("[finaliza] TarefaApplicationService - incrementaPomodoroAoUsuario");
+	}
+
+    @Override
+    public void concluiTarefa(UUID idTarefa, UUID idUsuario, String usuario) {
+        log.info("[inicia] TarefaApplicationService - concluiTarefa");
+        Usuario usuarioPorEmail = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        log.info("[usuarioPorEmail] {}", usuarioPorEmail);
+        Tarefa tarefa =
+                tarefaRepository.buscaTarefaPorId(idTarefa).orElseThrow(() -> APIException.build(HttpStatus.BAD_REQUEST, "Tarefa não encontrada!"));
+        tarefa.pertenceAoUsuario(usuarioPorEmail);
+        tarefa.concluiTarefa();
+        tarefaRepository.salva(tarefa);
+        log.info("[finaliza] TarefaApplicationService - concluiTarefa");
+
+    }
+
+    @Override
+    public void deletaTarefa(String usuario, UUID idTarefa) {
+        log.info("[inicia] TarefaApplicationService - deletarTarefa");
+        Tarefa tarefa = detalhaTarefa(usuario, idTarefa);
+        tarefaRepository.deletaTarefa(tarefa);
+        log.info("[finaliza] TarefaApplicationService - deletarTarefa");
+    }
 }
+

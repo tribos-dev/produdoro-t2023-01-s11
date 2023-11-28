@@ -20,6 +20,7 @@ import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.StatusUsuario;
+
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,4 +51,25 @@ class UsuarioApplicationServiceTest {
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
         assertEquals("credencial de autenticação não e valida", ex.getMessage());
     }
+	
+	@Test
+	void deveAlterarStatusParaFoco() {
+		Usuario usuario = DataHelper.createUsuario();
+		when(usuarioRepository.salva(any())).thenReturn(usuario);
+		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+		usuarioApplicationService.atualizaStatusParaFoco(usuario.getEmail(), usuario.getIdUsuario());
+		verify(usuarioRepository, times(1)).salva(any());
+
+	}
+
+	@Test
+	void statusParaFocoFalha() {
+		Usuario usuario = DataHelper.createUsuario();
+		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+		APIException exception = assertThrows(APIException.class,
+				() -> usuarioApplicationService.atualizaStatusParaFoco("borgestatielle@gmail,com", UUID.randomUUID()));
+		assertEquals("Credencial de autenticação não é válida", exception.getMessage());
+		assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+
+	}
 }

@@ -1,5 +1,7 @@
 package dev.wakandaacademy.produdoro.usuario.application.api;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -11,8 +13,6 @@ import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.usuario.application.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -49,4 +49,19 @@ public class UsuarioController implements UsuarioAPI {
 		log.info("[Finaliza]UsuarioController - mudaStatusParaPausaLonga");
 	}
 
+	@Override
+	public void atualizaStatusFoco(String token, UUID idUsuario) {
+		log.info("[inicia] UsuarioController - atualizaStatusFoco");
+		String usuario = getUsuarioByToken(token);
+		usuarioAppplicationService.atualizaStatusParaFoco(usuario, idUsuario);
+		log.info("[finaliza] UsuarioController - atualizaStatusFoco");
+		
+	}
+	
+	private String getUsuarioByToken(String token) {
+		log.debug("[token] {}", token);
+		String usuario = tokenService.getUsuarioByBearerToken(token).orElseThrow(() -> APIException.build(HttpStatus.UNAUTHORIZED, token));
+		log.info("[usuario] {}", usuario);
+		return usuario;
+	}
 }
