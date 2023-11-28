@@ -49,7 +49,7 @@ class UsuarioApplicationServiceTest {
         when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
         APIException ex = assertThrows(APIException.class, () -> {usuarioApplicationService.mudaStatusParaPausaLonga(usuario.getEmail(), idUsuario2);});
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
-        assertEquals("credencial de autenticação não e valida", ex.getMessage());
+        assertEquals("Credencial de autenticação não é válida", ex.getMessage());
     }
 	
 	@Test
