@@ -20,6 +20,7 @@ import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.StatusUsuario;
+
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,8 +32,51 @@ class UsuarioApplicationServiceTest {
     private UsuarioApplicationService usuarioApplicationService;
 
     @Test
-    public void MudaStatusParaPausaCurtaTest() {
+    public void MudaStatusParaPausaLongaTest() {
 
+        Usuario usuario = DataHelper.createUsuario();
+        when(usuarioRepository.salva(any())).thenReturn(usuario);
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        usuarioApplicationService.mudaStatusParaPausaLonga(usuario.getEmail(), usuario.getIdUsuario());
+        verify(usuarioRepository, times(1)).salva(any());
+        assertEquals(StatusUsuario.PAUSA_LONGA, usuario.getStatus());
+    }
+
+    @Test
+    public void naoDeveMudaStatusParaPausaLongaTest() {
+        UUID idUsuario2 = UUID.randomUUID();
+        Usuario usuario = DataHelper.createUsuario();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        APIException ex = assertThrows(APIException.class, () -> {
+            usuarioApplicationService.mudaStatusParaPausaLonga(usuario.getEmail(), idUsuario2);
+        });
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
+        assertEquals("Credencial de autenticação não é válida", ex.getMessage());
+    }
+
+    @Test
+    void deveAlterarStatusParaFoco() {
+        Usuario usuario = DataHelper.createUsuario();
+        when(usuarioRepository.salva(any())).thenReturn(usuario);
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        usuarioApplicationService.atualizaStatusParaFoco(usuario.getEmail(), usuario.getIdUsuario());
+        verify(usuarioRepository, times(1)).salva(any());
+
+    }
+
+    @Test
+    void statusParaFocoFalha() {
+        Usuario usuario = DataHelper.createUsuario();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        APIException exception = assertThrows(APIException.class,
+                () -> usuarioApplicationService.atualizaStatusParaFoco("borgestatielle@gmail,com", UUID.randomUUID()));
+        assertEquals("Credencial de autenticação não é válida", exception.getMessage());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+
+    }
+
+    @Test
+    public void MudaStatusParaPausaCurtaTest() {
         Usuario usuario = DataHelper.createUsuario();
         when(usuarioRepository.salva(any())).thenReturn(usuario);
         when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
@@ -50,6 +94,6 @@ class UsuarioApplicationServiceTest {
             usuarioApplicationService.mudaStatusParaPausaCurta(usuario.getEmail(), idUsuario2);
         });
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
-        assertEquals("credencial de autenticação não e valida", ex.getMessage());
+        assertEquals("Credencial de autenticação não é válida", ex.getMessage());
     }
 }
