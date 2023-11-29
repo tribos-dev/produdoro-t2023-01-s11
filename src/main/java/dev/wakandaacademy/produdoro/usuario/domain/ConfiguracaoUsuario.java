@@ -1,4 +1,4 @@
-package dev.wakandaacademy.produdoro.usuario.domain;
+ package dev.wakandaacademy.produdoro.usuario.domain;
 
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import lombok.AccessLevel;

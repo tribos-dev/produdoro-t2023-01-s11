@@ -1,22 +1,23 @@
 package dev.wakandaacademy.produdoro.tarefa.infra;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
+
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
-
-import org.springframework.data.mongodb.core.query.Query;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 @Log4j2
@@ -43,8 +44,14 @@ public class TarefaInfraRepository implements TarefaRepository {
         Optional<Tarefa> tarefaPorId = tarefaSpringMongoDBRepository.findByIdTarefa(idTarefa);
         log.info("[finaliza] TarefaInfraRepository - buscaTarefaPorId");
         return tarefaPorId;
-    }
-
+    }	
+	@Override
+	public List<Tarefa> buscaTarefasPorUsuario(UUID idUsuario) {
+		log.info("[inicia] TarefaInfraRepository - buscaTodasTarefas");
+        List<Tarefa> lista = tarefaSpringMongoDBRepository.findAllByIdUsuario(idUsuario);
+        log.info("[finaliza] TarefaInfraRepository - buscaTodasTarefas");
+        return lista;
+	} 
     @Override
     public void desativaTarefasAtivas(UUID idUsuario) {
         log.info("[inicia] TarefaInfraRepository - desativaTarefasAtivas");
@@ -60,4 +67,5 @@ public class TarefaInfraRepository implements TarefaRepository {
         tarefaSpringMongoDBRepository.delete(tarefa);
         log.info("[finaliza] TarefaInfraRepository - deletaTarefa");
     }
+
 }

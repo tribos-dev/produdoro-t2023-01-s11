@@ -2,25 +2,25 @@ package dev.wakandaacademy.produdoro.tarefa.domain;
 
 import java.util.UUID;
 
-import dev.wakandaacademy.produdoro.handler.APIException;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
-import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 
+import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Document(collection = "Tarefa")
@@ -61,13 +61,21 @@ public class Tarefa {
 		this.statusAtivacao = StatusAtivacaoTarefa.ATIVA;
 	}
 
+	public void edita(EditaTarefaRequest tarefaRequest) {
+		this.descricao = tarefaRequest.getDescricao();
+	}
+
+	public void contagemPomodoro() {
+		this.contagemPomodoro += 1;
+	}
+
 	private void validacaoDeUsuario(UUID idUsuario) {
 		if (!idUsuario.equals(this.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário Inválido!");
 		}
 	}
-		public void concluiTarefa () {
-			this.status = StatusTarefa.CONCLUIDA;
-		}
-}
 
+	public void concluiTarefa() {
+		this.status = StatusTarefa.CONCLUIDA;
+	}
+}
