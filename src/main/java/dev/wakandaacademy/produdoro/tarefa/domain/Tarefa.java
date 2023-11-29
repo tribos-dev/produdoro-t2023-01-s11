@@ -1,6 +1,5 @@
 package dev.wakandaacademy.produdoro.tarefa.domain;
 
-
 import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
@@ -57,12 +56,23 @@ public class Tarefa {
 		}
 	}
 
+	public void defineStatusAtivacao(UUID idUsuario) {
+		validacaoDeUsuario(this.idUsuario);
+		this.statusAtivacao = StatusAtivacaoTarefa.ATIVA;
+	}
+
 	public void edita(EditaTarefaRequest tarefaRequest) {
 		this.descricao = tarefaRequest.getDescricao();
 	}
 
 	public void contagemPomodoro() {
 		this.contagemPomodoro += 1;
+	}
+
+	private void validacaoDeUsuario(UUID idUsuario) {
+		if (!idUsuario.equals(this.getIdUsuario())) {
+			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário Inválido!");
+		}
 	}
 
 	public void concluiTarefa() {

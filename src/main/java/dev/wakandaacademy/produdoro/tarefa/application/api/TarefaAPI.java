@@ -30,6 +30,16 @@ public interface TarefaAPI {
 	TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization", required = true) String token,
 			@PathVariable UUID idTarefa);
 
+	@PatchMapping("/ativa-tarefa/{idTarefa}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	void ativaTarefa(@PathVariable UUID idTarefa, @RequestParam UUID idUsuario,
+			@RequestHeader(name = "Authorization") String token);
+
+	@PatchMapping("/conclui-tarefa/{idTarefa}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	void concluiTarefa(@PathVariable UUID idTarefa, @RequestParam UUID idUsuario,
+			@RequestHeader(name = "Authorization", required = true) String token);
+
 	@PatchMapping("/edita/{idTarefa}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	void editaTarefa(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa,
@@ -44,11 +54,6 @@ public interface TarefaAPI {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	void incrementaPomodoro(@RequestHeader(name = "Authorization", required = true) String token,
 			@PathVariable UUID idTarefa);
-
-	@PatchMapping("/conclui-tarefa/{idTarefa}")
-	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	void concluiTarefa(@PathVariable UUID idTarefa, @RequestParam UUID idUsuario,
-			@RequestHeader(name = "Authorization", required = true) String token);
 
 	@DeleteMapping("/{idTarefa}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)

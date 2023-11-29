@@ -14,13 +14,15 @@ public interface TarefaService {
 
 	Tarefa detalhaTarefa(String usuario, UUID idTarefa);
 
+	void ativaTarefa(UUID idTarefa, UUID idUsuario, String usuarioEmail);
+
+	void concluiTarefa(UUID idTarefa, UUID idUsuario, String usuario);
+
 	void editaTarefa(String usuario, UUID idTarefa, EditaTarefaRequest tarefaRequest);
 
 	List<TarefaListResponse> buscaTarefasPorUsuario(String usuario, UUID idUsuario);
 
 	void incrementaPomodoroAoUsuario(String emailUsuario, UUID idTarefa);
-
-	void concluiTarefa(UUID idTarefa, UUID idUsuario, String usuario);
 
 	void deletaTarefa(String usuario, UUID idTarefa);
 }
