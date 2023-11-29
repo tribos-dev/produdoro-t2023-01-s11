@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @ToString
@@ -44,6 +44,16 @@ public class Usuario {
 		this.email = usuarioNovo.getEmail();
 		this.status = StatusUsuario.FOCO;
 		this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
+	}
+
+	public void mudaStatusParaPausaCurta(UUID idUsuario) {
+		validaUsuario(idUsuario);
+		this.status = StatusUsuario.PAUSA_CURTA;
+	}
+
+	public void mudaStatusParaPausaLonga(UUID idUsuario) {
+		validaUsuario(idUsuario);
+		this.status = StatusUsuario.PAUSA_LONGA;
 	}
 
 	public void validaUsuario(UUID idUsuario) {
@@ -77,3 +87,4 @@ public class Usuario {
 
 	}
 }
+

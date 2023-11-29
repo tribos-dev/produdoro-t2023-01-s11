@@ -1,16 +1,18 @@
 package dev.wakandaacademy.produdoro.tarefa.application.repository;
 
-import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TarefaRepository {
+import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 
-    Tarefa salva(Tarefa tarefa);
-    Optional<Tarefa> buscaTarefaPorId(UUID idTarefa);
+public interface TarefaRepository {
+	Tarefa salva(Tarefa tarefa);
+
+	Optional<Tarefa> buscaTarefaPorId(UUID idTarefa);
+
 	List<Tarefa> buscaTarefasPorUsuario(UUID idUsuario);
-    void deletaTarefa(Tarefa tarefa);
+
+	void deletaTarefa(Tarefa tarefa);
 
 }
