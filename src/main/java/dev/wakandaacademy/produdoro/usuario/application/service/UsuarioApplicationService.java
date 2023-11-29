@@ -3,6 +3,7 @@ package dev.wakandaacademy.produdoro.usuario.application.service;
 import javax.validation.Valid;
 
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+
 import org.springframework.stereotype.Service;
 
 import dev.wakandaacademy.produdoro.credencial.application.service.CredencialService;
@@ -28,12 +29,11 @@ public class UsuarioApplicationService implements UsuarioService {
 		log.info("[inicia] UsuarioApplicationService - criaNovoUsuario");
 		var configuracaoPadrao = pomodoroService.getConfiguracaoPadrao();
 		credencialService.criaNovaCredencial(usuarioNovo);
-		var usuario = new Usuario(usuarioNovo,configuracaoPadrao);
+		var usuario = new Usuario(usuarioNovo, configuracaoPadrao);
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - criaNovoUsuario");
 		return new UsuarioCriadoResponse(usuario);
 	}
-
 
 	@Override
 	public UsuarioCriadoResponse buscaUsuarioPorId(UUID idUsuario) {
@@ -43,6 +43,24 @@ public class UsuarioApplicationService implements UsuarioService {
 		return new UsuarioCriadoResponse(usuario);
 	}
 
+	@Override
+	public void mudaStatusParaPausaCurta(String email, UUID idUsuario) {
+		log.info("[inicia] UsuarioApplicationService - mudaStatusParaPausaCurta");
+		usuarioRepository.buscaUsuarioPorId(idUsuario);
+		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(email);
+		usuario.mudaStatusParaPausaCurta(idUsuario);
+		usuarioRepository.salva(usuario);
+		log.info("[finaliza] UsuarioApplicationService - mudaStatusParaPausaCurta");
+	}
+
+	public void mudaStatusParaPausaLonga(String email, UUID idUsuario) {
+		log.info("[inicia] UsuarioApplicationService - mudaStatusParaPausaLonga");
+		usuarioRepository.buscaUsuarioPorId(idUsuario);
+		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(email);
+		usuario.mudaStatusParaPausaLonga(idUsuario);
+		usuarioRepository.salva(usuario);
+		log.info("[finaliza] UsuarioApplicationService - mudaStatusParaPausaLonga");
+	}
 
 	@Override
 	public void atualizaStatusParaFoco(String usuario, UUID idUsuario) {
@@ -53,6 +71,5 @@ public class UsuarioApplicationService implements UsuarioService {
 		log.info("[finaliza] UsuarioApplicationService - atualizaStatusParaFoco");
 
 	}
-
 
 }
