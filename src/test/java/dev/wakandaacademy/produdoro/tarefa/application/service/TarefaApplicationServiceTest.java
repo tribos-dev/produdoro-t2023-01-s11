@@ -4,31 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaListResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
@@ -38,11 +33,9 @@ import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 @ExtendWith(MockitoExtension.class)
 class TarefaApplicationServiceTest {
 
-	// @Autowired
 	@InjectMocks
 	TarefaApplicationService tarefaApplicationService;
 
-	// @MockBean
 	@Mock
 	TarefaRepository tarefaRepository;
 
@@ -61,22 +54,37 @@ class TarefaApplicationServiceTest {
 		assertEquals(UUID.class, response.getIdTarefa().getClass());
 	}
 
-	@Test
-	public void testConcluiTarefa() {
-		String usuario = "email@email.com";
-		UUID idTarefa = UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb");
-		Usuario usuarioMock = mock(Usuario.class);
-		Tarefa tarefaMock = mock(Tarefa.class);
-		when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
-		when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
-		tarefaApplicationService.concluiTarefa(idTarefa, UUID.randomUUID(), usuario);
-		verify(usuarioRepository).buscaUsuarioPorEmail(usuario);
-		verify(tarefaRepository).buscaTarefaPorId(idTarefa);
-		verify(tarefaMock).pertenceAoUsuario(usuarioMock);
-		verify(tarefaMock).concluiTarefa();
-		verify(tarefaRepository).salva(tarefaMock);
-	}
+    @Test
+    public void testConcluiTarefa() {
+        String usuario = "email@email.com";
+        UUID idTarefa = UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb");
+        Usuario usuarioMock = mock(Usuario.class);
+        Tarefa tarefaMock = mock(Tarefa.class);
+        when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
+        when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
+        tarefaApplicationService.concluiTarefa(idTarefa,UUID.randomUUID(),usuario);
+        verify(usuarioRepository).buscaUsuarioPorEmail(usuario);
+        verify(tarefaRepository).buscaTarefaPorId(idTarefa);
+        verify(tarefaMock).pertenceAoUsuario(usuarioMock);
+        verify(tarefaMock).concluiTarefa();
+        verify(tarefaRepository).salva(tarefaMock);
+}
 
+    @Test
+    void testEditaTarefa() {
+        EditaTarefaRequest request = getEditaTarefaRequest();
+        String email = "gabriel123@gmail.com";
+        UUID idTarefa = UUID.randomUUID();
+        Tarefa tarefa = mock(Tarefa.class);
+        when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.editaTarefa(email, idTarefa, request);
+        verify(tarefaRepository, times(1)).salva(tarefa);
+
+    }
+    public EditaTarefaRequest getEditaTarefaRequest() {
+        return new EditaTarefaRequest("tarefa 1");
+    }
+    
 	public TarefaRequest getTarefaRequest() {
 		TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
 		return request;
