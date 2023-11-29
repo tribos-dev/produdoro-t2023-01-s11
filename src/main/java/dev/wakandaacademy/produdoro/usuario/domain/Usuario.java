@@ -46,6 +46,11 @@ public class Usuario {
 		this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
 	}
 
+	public void mudaStatusParaPausaCurta(UUID idUsuario) {
+		validaUsuario(idUsuario);
+		this.status = StatusUsuario.PAUSA_CURTA;
+	}
+
 	public void mudaStatusParaPausaLonga(UUID idUsuario) {
 		validaUsuario(idUsuario);
 		this.status = StatusUsuario.PAUSA_LONGA;
